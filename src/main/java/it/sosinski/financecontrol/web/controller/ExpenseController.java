@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -31,6 +32,16 @@ class ExpenseController {
 
         LOGGER.info("list() = " + expenseDtos);
         return expenseDtos;
+    }
+
+    @GetMapping("/{id}")
+    protected ExpenseDto read(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException {
+        LOGGER.info("read(" + id + ")");
+
+        ExpenseDto expenseDto = expenseService.read(id);
+
+        LOGGER.info("read() = " + expenseDto);
+        return expenseDto;
     }
 
     @PostMapping

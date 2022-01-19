@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.service;
 
+import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
 import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExpenseService {
@@ -32,6 +34,18 @@ public class ExpenseService {
 
         LOGGER.info("expenseDtos()");
         return expenseDtos;
+    }
+
+    public ExpenseDto read(Long expenseId) throws ExpenseNotFoundException {
+        LOGGER.info("read(" + expenseId + ")");
+
+        Optional<ExpenseEntity> optionalEventEntity = expenseRepository.findById(expenseId);
+        ExpenseEntity expenseEntity = optionalEventEntity.orElseThrow(
+                () -> new ExpenseNotFoundException("Expense not found for id: " + expenseId));
+        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(expenseEntity);
+
+        LOGGER.info("read(...) = " + expenseDto);
+        return expenseDto;
     }
 
     public ExpenseDto create(NewExpenseDto newExpenseDto) {

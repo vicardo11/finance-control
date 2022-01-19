@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -27,7 +28,35 @@ class ExpenseControllerTest {
     private ExpenseController expenseController;
 
     @Test
-    void given_whenList_thenResultListSizeEquals() throws Exception {
+    void givenExpenseDto_whenRead_thenReadExpenseDtoNotNull() throws ExpenseNotFoundException {
+        //Given
+        ExpenseDto expenseDto = new ExpenseDto();
+        expenseDto.setExpenseId(EXPENSE_ID_1);
+
+        //When
+        when(expenseService.read(EXPENSE_ID_1)).thenReturn(expenseDto);
+        ExpenseDto readExpenseDto = expenseController.read(EXPENSE_ID_1);
+
+        //Then
+        assertNotNull(readExpenseDto);
+    }
+
+    @Test
+    void givenExpenseDto_whenRead_thenReadExpenseDtoIdEquals() throws ExpenseNotFoundException {
+        //Given
+        ExpenseDto expenseDto = new ExpenseDto();
+        expenseDto.setExpenseId(EXPENSE_ID_1);
+
+        //When
+        when(expenseService.read(EXPENSE_ID_1)).thenReturn(expenseDto);
+        ExpenseDto readExpenseDto = expenseController.read(EXPENSE_ID_1);
+
+        //Then
+        assertEquals(EXPENSE_ID_1, readExpenseDto.getExpenseId(), "Found ExpenseDto.id is not equal to: " + EXPENSE_ID_1);
+    }
+
+    @Test
+    void givenExpenseDtos_whenList_thenResultListSizeEquals() {
         //Given
         List<ExpenseDto> expenseDtos = List.of(
                 new ExpenseDto(),
@@ -44,7 +73,7 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void given_whenCreate_thenResultExpenseDtoNotNull() throws Exception {
+    void given_whenCreate_thenResultExpenseDtoNotNull() {
         //Given
         NewExpenseDto newExpenseDto = new NewExpenseDto();
 
@@ -60,7 +89,7 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void given_whenCreate_thenResultExpenseDtoIdEquals() throws Exception {
+    void given_whenCreate_thenResultExpenseDtoIdEquals() {
         //Given
         NewExpenseDto newExpenseDto = new NewExpenseDto();
 
