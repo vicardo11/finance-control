@@ -18,39 +18,39 @@ public class ExpenseMapper {
     private static final ModelMapper mapper = new ModelMapper();
 
     public ExpenseEntity fromDtoToEntity(ExpenseDto expenseDto) {
-        LOGGER.info("from(" + expenseDto + ")");
+        LOGGER.info("fromDtoToEntity(" + expenseDto + ")");
 
         ExpenseEntity expenseEntity = mapper.map(expenseDto, ExpenseEntity.class);
 
-        LOGGER.info("from(...) = " + expenseEntity);
+        LOGGER.info("fromDtoToEntity(...) = " + expenseEntity);
         return expenseEntity;
     }
 
     public ExpenseDto fromEntityToDto(ExpenseEntity expenseEntity) {
-        LOGGER.info("from(" + expenseEntity + ")");
+        LOGGER.info("fromEntityToDto(" + expenseEntity + ")");
 
         ExpenseDto expenseDto = mapper.map(expenseEntity, ExpenseDto.class);
 
-        LOGGER.info("from(...) = " + expenseEntity);
+        LOGGER.info("fromEntityToDto(...) = " + expenseDto);
         return expenseDto;
     }
 
     public List<ExpenseEntity> fromDtosToEntities(List<ExpenseDto> expenseDtos) {
-        LOGGER.info("fromDtos(" + expenseDtos + ")");
+        LOGGER.info("fromDtosToEntities(" + expenseDtos + ")");
 
         List<ExpenseEntity> expenseEntities =
                 expenseDtos.stream().map(this::fromDtoToEntity).collect(Collectors.toList());
 
-        LOGGER.info("fromDtos(...) = " + expenseEntities);
+        LOGGER.info("fromDtosToEntities(...) = " + expenseEntities);
         return expenseEntities;
     }
 
     public List<ExpenseDto> fromEntitiesToDtos(List<ExpenseEntity> expenseEntities) {
-        LOGGER.info("fromEntities(" + expenseEntities + ")");
+        LOGGER.info("fromEntitiesToDtos(" + expenseEntities + ")");
 
         List<ExpenseDto> expenseDtos = expenseEntities.stream().map(this::fromEntityToDto).collect(Collectors.toList());
 
-        LOGGER.info("fromEntities(...) = " + expenseDtos);
+        LOGGER.info("fromEntitiesToDtos(...) = " + expenseDtos);
         return expenseDtos;
     }
 
