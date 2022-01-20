@@ -58,4 +58,15 @@ public class ExpenseService {
         LOGGER.info("newExpense(" + expenseDto + ")");
         return expenseDto;
     }
+
+    public void delete(Long expenseId) throws ExpenseNotFoundException {
+        LOGGER.info("delete(" + expenseId + ")");
+
+        Optional<ExpenseEntity> expenseEntityOptional = expenseRepository.findById(expenseId);
+        ExpenseEntity expenseEntity = expenseEntityOptional.orElseThrow(
+                () -> new ExpenseNotFoundException("Expense not found for id: " + expenseId));
+        expenseRepository.delete(expenseEntity);
+
+        LOGGER.info("delete(...)");
+    }
 }

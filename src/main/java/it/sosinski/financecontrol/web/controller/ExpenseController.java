@@ -6,6 +6,8 @@ import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +54,16 @@ class ExpenseController {
 
         LOGGER.info("newExpense(...) = " + expenseDto);
         return expenseDto;
+    }
+
+    @DeleteMapping("/{id}")
+    protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException {
+        LOGGER.info("delete(" + id + ")");
+
+        expenseService.delete(id);
+
+        LOGGER.info("delete(...)");
+        return new ResponseEntity<>("Expense correctly deleted", HttpStatus.OK);
     }
 
 }
