@@ -41,7 +41,7 @@ public class ExpenseService {
 
         Optional<ExpenseEntity> optionalEventEntity = expenseRepository.findById(expenseId);
         ExpenseEntity expenseEntity = optionalEventEntity.orElseThrow(
-                () -> new ExpenseNotFoundException("Expense not found for id: " + expenseId));
+                () -> new ExpenseNotFoundException(expenseId));
         ExpenseDto expenseDto = expenseMapper.fromEntityToDto(expenseEntity);
 
         LOGGER.info("read(...) = " + expenseDto);
@@ -64,7 +64,7 @@ public class ExpenseService {
 
         Optional<ExpenseEntity> expenseEntityOptional = expenseRepository.findById(expenseId);
         ExpenseEntity expenseEntity = expenseEntityOptional.orElseThrow(
-                () -> new ExpenseNotFoundException("Expense not found for id: " + expenseId));
+                () -> new ExpenseNotFoundException(expenseId));
         expenseRepository.delete(expenseEntity);
 
         LOGGER.info("delete(...)");
