@@ -25,11 +25,15 @@ public class ExpenseCategory {
 
     @OneToMany(mappedBy = "expenseCategory")
     @ToString.Exclude
-    private Set<Expense> expenseEntities;
+    private Set<Expense> expenses;
 
     public void addExpense(Expense expense) {
-        expenseEntities.add(expense);
+        expenses.add(expense);
         expense.setExpenseCategory(this);
+    }
+
+    public void deleteExpense(Expense expense) {
+        expenses.remove(expense);
     }
 }
 

@@ -72,12 +72,15 @@ public class ExpenseService {
         return expenseDto;
     }
 
-    public void delete(Long expenseId) throws ExpenseNotFoundException {
+    public void delete(Long expenseId) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
         LOGGER.info("delete(" + expenseId + ")");
 
-        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
-        Expense expense = expenseOptional.orElseThrow(
-                () -> new ExpenseNotFoundException(expenseId));
+        Expense expense = readExpenseById(expenseId);
+        Long expenseCategoryId = expense.getExpenseCategory().getId();
+        ExpenseCategory expenseCategory = readExpenseCategoryById(expenseCategoryId);
+        expenseCategory.deleteExpense(expense);
+
+        expenseCategoryRepository.save(expenseCategory);
         expenseRepository.delete(expense);
 
         LOGGER.info("delete(...)");
@@ -87,6 +90,13 @@ public class ExpenseService {
         Optional<ExpenseCategory> expenseCategoryOptional = expenseCategoryRepository.findById(expenseCategoryId);
         return expenseCategoryOptional.orElseThrow(
                 () -> new ExpenseCategoryNotFoundException(expenseCategoryId)
+        );
+    }
+
+    private Expense readExpenseById(Long expenseId) throws ExpenseNotFoundException {
+        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
+        return expenseOptional.orElseThrow(
+                () -> new ExpenseNotFoundException(expenseId)
         );
     }
 }

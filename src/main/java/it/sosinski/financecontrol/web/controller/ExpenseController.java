@@ -58,7 +58,7 @@ class ExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException {
+    protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
         LOGGER.info("delete(" + id + ")");
 
         expenseService.delete(id);
