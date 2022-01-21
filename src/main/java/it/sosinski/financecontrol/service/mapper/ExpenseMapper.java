@@ -19,6 +19,9 @@ public class ExpenseMapper {
     private static final ModelMapper mapper = new ModelMapper();
 
     public ExpenseMapper() {
+        /* We have to skip this property, because mapper was using expenseCategoryId
+           as both - an expenseId and an expenseCategoryId
+         */
         mapper.addMappings(new PropertyMap<NewExpenseDto, Expense>() {
             @Override
             protected void configure() {
