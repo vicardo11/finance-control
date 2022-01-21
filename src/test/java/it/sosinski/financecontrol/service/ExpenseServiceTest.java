@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.service;
 
+import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
 import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
@@ -70,7 +71,7 @@ class ExpenseServiceTest {
     }
 
     @Test
-    void givenNewExpenseDto_whenNewExpense_thenExpenseDtoNotNull() {
+    void givenNewExpenseDto_whenNewExpense_thenExpenseDtoNotNull() throws ExpenseCategoryNotFoundException {
         //Given
         NewExpenseDto newExpenseDto = new NewExpenseDto();
         ExpenseEntity expenseEntity = new ExpenseEntity();

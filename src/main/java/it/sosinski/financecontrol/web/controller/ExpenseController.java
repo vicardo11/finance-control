@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
@@ -47,7 +48,7 @@ class ExpenseController {
     }
 
     @PostMapping
-    protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto) {
+    protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
         LOGGER.info("newExpense(" + newExpenseDto + ")");
 
         ExpenseDto expenseDto = expenseService.create(newExpenseDto);

@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
@@ -73,7 +74,7 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void given_whenCreate_thenResultExpenseDtoNotNull() {
+    void given_whenCreate_thenResultExpenseDtoNotNull() throws ExpenseCategoryNotFoundException {
         //Given
         NewExpenseDto newExpenseDto = new NewExpenseDto();
 
@@ -89,7 +90,7 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void given_whenCreate_thenResultExpenseDtoIdEquals() {
+    void given_whenCreate_thenResultExpenseDtoIdEquals() throws ExpenseCategoryNotFoundException {
         //Given
         NewExpenseDto newExpenseDto = new NewExpenseDto();
 

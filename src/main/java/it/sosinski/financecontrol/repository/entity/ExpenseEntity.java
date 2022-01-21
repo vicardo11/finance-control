@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import static it.sosinski.financecontrol.repository.entity.EntityConstants.COLUMN_NAME_EXPENSE_CATEGORY_ID;
 import static it.sosinski.financecontrol.repository.entity.EntityConstants.TABLE_NAME_EXPENSES;
 
 @Getter
@@ -23,11 +24,10 @@ public class ExpenseEntity {
 
     private Date date;
 
-    private Long categoryId;
-
     private BigDecimal price;
 
     @ManyToOne
+    @JoinColumn(name = COLUMN_NAME_EXPENSE_CATEGORY_ID, nullable = false)
     private ExpenseCategoryEntity expenseCategoryEntity;
 
 }
