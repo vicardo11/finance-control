@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.service.mapper;
 
+import it.sosinski.financecontrol.repository.entity.ExpenseCategoryEntity;
 import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -36,13 +37,15 @@ class ExpenseMapperTest {
     void givenExpenseEntity_whenMap_thenExpenseDtoCategoryIdEquals() {
         //Given
         ExpenseEntity expenseEntity = new ExpenseEntity();
-//        expenseEntity.setCategoryId(CATEGORY_ID_1);
+        ExpenseCategoryEntity expenseCategoryEntity = new ExpenseCategoryEntity();
+        expenseCategoryEntity.setId(CATEGORY_ID_1);
+        expenseEntity.setExpenseCategoryEntity(expenseCategoryEntity);
 
         //When
         ExpenseDto expenseDto = mapper.fromEntityToDto(expenseEntity);
 
         //Then
-        assertEquals(CATEGORY_ID_1, expenseDto.getCategoryId(), "ExpenseDto.categoryId isn't equal to: " + CATEGORY_ID_1);
+        assertEquals(CATEGORY_ID_1, expenseDto.getExpenseCategoryId(), "ExpenseDto.categoryId isn't equal to: " + CATEGORY_ID_1);
     }
 
     @Test
@@ -85,19 +88,6 @@ class ExpenseMapperTest {
     }
 
     @Test
-    void givenExpenseDto_whenMap_thenExpenseEntityCategoryIdEquals() {
-        //Given
-        ExpenseDto expenseDto = new ExpenseDto();
-        expenseDto.setCategoryId(CATEGORY_ID_1);
-
-        //When
-        ExpenseEntity expenseEntity = mapper.fromDtoToEntity(expenseDto);
-
-        //Then
-//        assertEquals(CATEGORY_ID_1, expenseEntity.getCategoryId(), "ExpenseEntity.categoryId isn't equal to: " + CATEGORY_ID_1);
-    }
-
-    @Test
     void givenExpenseDto_whenMap_thenExpenseEntityDateEquals() {
         //Given
         ExpenseDto expenseDto = new ExpenseDto();
@@ -121,19 +111,6 @@ class ExpenseMapperTest {
 
         //Then
         assertEquals(EXPENSE_PRICE_10, expenseEntity.getPrice(), "ExpenseEntity.price isn't equal to: " + EXPENSE_PRICE_10);
-    }
-
-    @Test
-    void givenNewExpenseDto_whenMap_thenExpenseEntityCategoryIdEquals() {
-        //Given
-        NewExpenseDto newExpenseDto = new NewExpenseDto();
-//        newExpenseDto.setCategoryId(CATEGORY_ID_1);
-
-        //When
-        ExpenseEntity expenseEntity = mapper.fromNewDtoToEntity(newExpenseDto);
-
-        //Then
-//        assertEquals(CATEGORY_ID_1, expenseEntity.getCategoryId(), "ExpenseEntity.price isn't equal to: " + CATEGORY_ID_1);
     }
 
     @Test
