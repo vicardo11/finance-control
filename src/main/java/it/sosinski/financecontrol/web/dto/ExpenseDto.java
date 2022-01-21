@@ -18,6 +18,6 @@ public class ExpenseDto {
     private Long expenseId;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
-    private Long categoryId;
+    private Long expenseCategoryId;
     private BigDecimal price;
 }
