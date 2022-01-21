@@ -9,17 +9,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ExpenseCategoryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseCategoryService.class);
 
-    private final ExpenseCategoryRepository expenseRepository;
+    private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseCategoryMapper expenseCategoryMapper;
 
-    public ExpenseCategoryService(ExpenseCategoryRepository expenseRepository, ExpenseCategoryMapper expenseCategoryMapper) {
-        this.expenseRepository = expenseRepository;
+    public ExpenseCategoryService(ExpenseCategoryRepository expenseCategoryRepository, ExpenseCategoryMapper expenseCategoryMapper) {
+        this.expenseCategoryRepository = expenseCategoryRepository;
         this.expenseCategoryMapper = expenseCategoryMapper;
+    }
+
+    public List<ExpenseCategoryDto> list() {
+        LOGGER.info("list()");
+
+        List<ExpenseCategory> expenseCategories = expenseCategoryRepository.findAll();
+        List<ExpenseCategoryDto> expenseCategoryDtos = expenseCategoryMapper.fromEntitiesToDtos(expenseCategories);
+
+        LOGGER.info("list() = " + expenseCategoryDtos);
+        return expenseCategoryDtos;
     }
 
     public ExpenseCategoryDto create(NewExpenseCategoryDto newExpenseCategoryDto) {
@@ -29,7 +41,7 @@ public class ExpenseCategoryService {
         // TODO: If so, throw message, that category already exists
         ExpenseCategory expenseCategory =
                 expenseCategoryMapper.fromNewExpenseCategoryDtoToEntity(newExpenseCategoryDto);
-        ExpenseCategory savedExpenseCategory = expenseRepository.save(expenseCategory);
+        ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(expenseCategory);
         ExpenseCategoryDto expenseCategoryDto = expenseCategoryMapper.fromEntityToDto(savedExpenseCategory);
 
         LOGGER.info("create(" + expenseCategoryDto + ")");

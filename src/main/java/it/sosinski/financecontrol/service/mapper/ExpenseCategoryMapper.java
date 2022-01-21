@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class ExpenseCategoryMapper {
 
@@ -30,5 +33,15 @@ public class ExpenseCategoryMapper {
 
         LOGGER.info("fromNewExpenseCategoryDtoToEntity(...) = " + expenseCategory);
         return expenseCategory;
+    }
+
+    public List<ExpenseCategoryDto> fromEntitiesToDtos(List<ExpenseCategory> expenseCategories) {
+        LOGGER.info("fromEntitiesToDtos(" + expenseCategories + ")");
+
+        List<ExpenseCategoryDto> expenseCategoryDtos =
+                expenseCategories.stream().map(this::fromEntityToDto).collect(Collectors.toList());
+
+        LOGGER.info("fromEntitiesToDtos(...) = " + expenseCategoryDtos);
+        return expenseCategoryDtos;
     }
 }
