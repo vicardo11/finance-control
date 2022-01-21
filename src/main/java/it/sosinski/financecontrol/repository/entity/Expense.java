@@ -16,7 +16,7 @@ import static it.sosinski.financecontrol.repository.entity.EntityConstants.TABLE
 @ToString
 @Entity
 @Table(name = TABLE_NAME_EXPENSES)
-public class ExpenseEntity {
+public class Expense {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,6 @@ public class ExpenseEntity {
 
     @ManyToOne
     @JoinColumn(name = COLUMN_NAME_EXPENSE_CATEGORY_ID, nullable = false)
-    private ExpenseCategoryEntity expenseCategoryEntity;
+    private ExpenseCategory expenseCategory;
 
 }

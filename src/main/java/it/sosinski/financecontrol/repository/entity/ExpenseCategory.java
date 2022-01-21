@@ -14,7 +14,7 @@ import static it.sosinski.financecontrol.repository.entity.EntityConstants.TABLE
 @ToString
 @Entity
 @Table(name = TABLE_NAME_EXPENSE_CATEGORIES)
-public class ExpenseCategoryEntity {
+public class ExpenseCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +23,13 @@ public class ExpenseCategoryEntity {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "expenseCategoryEntity")
+    @OneToMany(mappedBy = "expenseCategory")
     @ToString.Exclude
-    private Set<ExpenseEntity> expenseEntities;
+    private Set<Expense> expenseEntities;
 
-    public void addExpense(ExpenseEntity expenseEntity) {
-        expenseEntities.add(expenseEntity);
-        expenseEntity.setExpenseCategoryEntity(this);
+    public void addExpense(Expense expense) {
+        expenseEntities.add(expense);
+        expense.setExpenseCategory(this);
     }
 }
 

@@ -4,8 +4,8 @@ import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundExceptio
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
-import it.sosinski.financecontrol.repository.entity.ExpenseCategoryEntity;
-import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
+import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
+import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -34,7 +34,7 @@ public class ExpenseService {
     public List<ExpenseDto> list() {
         LOGGER.info("expenseDtos()");
 
-        List<ExpenseEntity> expenseEntities = expenseRepository.findAll();
+        List<Expense> expenseEntities = expenseRepository.findAll();
         List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
 
         LOGGER.info("expenseDtos()");
@@ -44,10 +44,10 @@ public class ExpenseService {
     public ExpenseDto read(Long expenseId) throws ExpenseNotFoundException {
         LOGGER.info("read(" + expenseId + ")");
 
-        Optional<ExpenseEntity> optionalEventEntity = expenseRepository.findById(expenseId);
-        ExpenseEntity expenseEntity = optionalEventEntity.orElseThrow(
+        Optional<Expense> optionalEvent = expenseRepository.findById(expenseId);
+        Expense expense = optionalEvent.orElseThrow(
                 () -> new ExpenseNotFoundException(expenseId));
-        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(expenseEntity);
+        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(expense);
 
         LOGGER.info("read(...) = " + expenseDto);
         return expenseDto;
@@ -56,17 +56,17 @@ public class ExpenseService {
     public ExpenseDto create(NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
         LOGGER.info("newExpense(" + newExpenseDto + ")");
 
-        ExpenseCategoryEntity expenseCategoryEntity = readExpenseCategoryEntityById(newExpenseDto.getExpenseCategoryId());
+        ExpenseCategory expenseCategory = readExpenseCategoryById(newExpenseDto.getExpenseCategoryId());
 
-        ExpenseEntity expenseEntity = expenseMapper.fromNewDtoToEntity(newExpenseDto);
+        Expense expense = expenseMapper.fromNewDtoToEntity(newExpenseDto);
 
-        expenseCategoryEntity.addExpense(expenseEntity);
+        expenseCategory.addExpense(expense);
 
-        ExpenseEntity savedExpenseEntity = expenseRepository.save(expenseEntity);
+        Expense savedExpense = expenseRepository.save(expense);
 
-        expenseCategoryRepository.save(expenseCategoryEntity);
+        expenseCategoryRepository.save(expenseCategory);
 
-        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(savedExpenseEntity);
+        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(savedExpense);
 
         LOGGER.info("newExpense(" + expenseDto + ")");
         return expenseDto;
@@ -75,17 +75,17 @@ public class ExpenseService {
     public void delete(Long expenseId) throws ExpenseNotFoundException {
         LOGGER.info("delete(" + expenseId + ")");
 
-        Optional<ExpenseEntity> expenseEntityOptional = expenseRepository.findById(expenseId);
-        ExpenseEntity expenseEntity = expenseEntityOptional.orElseThrow(
+        Optional<Expense> expenseOptional = expenseRepository.findById(expenseId);
+        Expense expense = expenseOptional.orElseThrow(
                 () -> new ExpenseNotFoundException(expenseId));
-        expenseRepository.delete(expenseEntity);
+        expenseRepository.delete(expense);
 
         LOGGER.info("delete(...)");
     }
 
-    private ExpenseCategoryEntity readExpenseCategoryEntityById(Long expenseCategoryId) throws ExpenseCategoryNotFoundException {
-        Optional<ExpenseCategoryEntity> expenseCategoryEntityOptional = expenseCategoryRepository.findById(expenseCategoryId);
-        return expenseCategoryEntityOptional.orElseThrow(
+    private ExpenseCategory readExpenseCategoryById(Long expenseCategoryId) throws ExpenseCategoryNotFoundException {
+        Optional<ExpenseCategory> expenseCategoryOptional = expenseCategoryRepository.findById(expenseCategoryId);
+        return expenseCategoryOptional.orElseThrow(
                 () -> new ExpenseCategoryNotFoundException(expenseCategoryId)
         );
     }

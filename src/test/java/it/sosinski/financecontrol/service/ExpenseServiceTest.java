@@ -2,7 +2,7 @@ package it.sosinski.financecontrol.service;
 
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
-import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
+import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import org.junit.jupiter.api.Test;
@@ -33,15 +33,15 @@ class ExpenseServiceTest {
     @Test
     void given_whenRead_thenExpenseDtoNotNull() throws ExpenseNotFoundException {
         //Given
-        ExpenseEntity expenseEntity = new ExpenseEntity();
-        expenseEntity.setExpenseId(EXPENSE_ID_1);
+        Expense expense = new Expense();
+        expense.setExpenseId(EXPENSE_ID_1);
 
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setExpenseId(EXPENSE_ID_1);
 
         //When
-        when(expenseRepository.findById(EXPENSE_ID_1)).thenReturn(Optional.of(expenseEntity));
-        when(expenseMapper.fromEntityToDto(expenseEntity)).thenReturn(expenseDto);
+        when(expenseRepository.findById(EXPENSE_ID_1)).thenReturn(Optional.of(expense));
+        when(expenseMapper.fromEntityToDto(expense)).thenReturn(expenseDto);
 
         ExpenseDto readExpenseDto = expenseService.read(EXPENSE_ID_1);
 
@@ -52,15 +52,15 @@ class ExpenseServiceTest {
     @Test
     void given_whenRead_thenExpenseDtoIdEquals() throws ExpenseNotFoundException {
         //Given
-        ExpenseEntity expenseEntity = new ExpenseEntity();
-        expenseEntity.setExpenseId(EXPENSE_ID_1);
+        Expense expense = new Expense();
+        expense.setExpenseId(EXPENSE_ID_1);
 
         ExpenseDto expenseDto = new ExpenseDto();
         expenseDto.setExpenseId(EXPENSE_ID_1);
 
         //When
-        when(expenseRepository.findById(EXPENSE_ID_1)).thenReturn(Optional.of(expenseEntity));
-        when(expenseMapper.fromEntityToDto(expenseEntity)).thenReturn(expenseDto);
+        when(expenseRepository.findById(EXPENSE_ID_1)).thenReturn(Optional.of(expense));
+        when(expenseMapper.fromEntityToDto(expense)).thenReturn(expenseDto);
 
         ExpenseDto readExpenseDto = expenseService.read(EXPENSE_ID_1);
 
@@ -71,9 +71,9 @@ class ExpenseServiceTest {
     @Test
     void given_whenList_thenExpenseDtosSizeEquals() {
         //Given
-        List<ExpenseEntity> expenseEntities = List.of(
-                new ExpenseEntity(),
-                new ExpenseEntity()
+        List<Expense> expenseEntities = List.of(
+                new Expense(),
+                new Expense()
         );
 
         List<ExpenseDto> expenseDtos = List.of(

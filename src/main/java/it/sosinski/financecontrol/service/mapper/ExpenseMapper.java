@@ -1,6 +1,6 @@
 package it.sosinski.financecontrol.service.mapper;
 
-import it.sosinski.financecontrol.repository.entity.ExpenseEntity;
+import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.modelmapper.ModelMapper;
@@ -17,35 +17,35 @@ public class ExpenseMapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseMapper.class);
     private static final ModelMapper mapper = new ModelMapper();
 
-    public ExpenseEntity fromDtoToEntity(ExpenseDto expenseDto) {
+    public Expense fromDtoToEntity(ExpenseDto expenseDto) {
         LOGGER.info("fromDtoToEntity(" + expenseDto + ")");
 
-        ExpenseEntity expenseEntity = mapper.map(expenseDto, ExpenseEntity.class);
+        Expense expense = mapper.map(expenseDto, Expense.class);
 
-        LOGGER.info("fromDtoToEntity(...) = " + expenseEntity);
-        return expenseEntity;
+        LOGGER.info("fromDtoToEntity(...) = " + expense);
+        return expense;
     }
 
-    public ExpenseDto fromEntityToDto(ExpenseEntity expenseEntity) {
-        LOGGER.info("fromEntityToDto(" + expenseEntity + ")");
+    public ExpenseDto fromEntityToDto(Expense expense) {
+        LOGGER.info("fromEntityToDto(" + expense + ")");
 
-        ExpenseDto expenseDto = mapper.map(expenseEntity, ExpenseDto.class);
+        ExpenseDto expenseDto = mapper.map(expense, ExpenseDto.class);
 
         LOGGER.info("fromEntityToDto(...) = " + expenseDto);
         return expenseDto;
     }
 
-    public List<ExpenseEntity> fromDtosToEntities(List<ExpenseDto> expenseDtos) {
+    public List<Expense> fromDtosToEntities(List<ExpenseDto> expenseDtos) {
         LOGGER.info("fromDtosToEntities(" + expenseDtos + ")");
 
-        List<ExpenseEntity> expenseEntities =
+        List<Expense> expenseEntities =
                 expenseDtos.stream().map(this::fromDtoToEntity).collect(Collectors.toList());
 
         LOGGER.info("fromDtosToEntities(...) = " + expenseEntities);
         return expenseEntities;
     }
 
-    public List<ExpenseDto> fromEntitiesToDtos(List<ExpenseEntity> expenseEntities) {
+    public List<ExpenseDto> fromEntitiesToDtos(List<Expense> expenseEntities) {
         LOGGER.info("fromEntitiesToDtos(" + expenseEntities + ")");
 
         List<ExpenseDto> expenseDtos = expenseEntities.stream().map(this::fromEntityToDto).collect(Collectors.toList());
@@ -54,13 +54,13 @@ public class ExpenseMapper {
         return expenseDtos;
     }
 
-    public ExpenseEntity fromNewDtoToEntity(NewExpenseDto newExpenseDto) {
+    public Expense fromNewDtoToEntity(NewExpenseDto newExpenseDto) {
         LOGGER.info("fromNewDtoToEntity(" + newExpenseDto + ")");
 
-        ExpenseEntity expenseEntity = mapper.map(newExpenseDto, ExpenseEntity.class);
+        Expense expense = mapper.map(newExpenseDto, Expense.class);
 
-        LOGGER.info("fromNewDtoToEntity(...) = " + expenseEntity);
-        return expenseEntity;
+        LOGGER.info("fromNewDtoToEntity(...) = " + expense);
+        return expense;
     }
 
 }

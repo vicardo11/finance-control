@@ -1,7 +1,7 @@
 package it.sosinski.financecontrol.service;
 
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
-import it.sosinski.financecontrol.repository.entity.ExpenseCategoryEntity;
+import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.service.mapper.ExpenseCategoryMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseCategoryDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseCategoryDto;
@@ -27,10 +27,10 @@ public class ExpenseCategoryService {
 
         // TODO: Check if category with given name already exists
         // TODO: If so, throw message, that category already exists
-        ExpenseCategoryEntity expenseCategoryEntity =
+        ExpenseCategory expenseCategory =
                 expenseCategoryMapper.fromNewExpenseCategoryDtoToEntity(newExpenseCategoryDto);
-        ExpenseCategoryEntity savedExpenseCategoryEntity = expenseRepository.save(expenseCategoryEntity);
-        ExpenseCategoryDto expenseCategoryDto = expenseCategoryMapper.fromEntityToDto(savedExpenseCategoryEntity);
+        ExpenseCategory savedExpenseCategory = expenseRepository.save(expenseCategory);
+        ExpenseCategoryDto expenseCategoryDto = expenseCategoryMapper.fromEntityToDto(savedExpenseCategory);
 
         LOGGER.info("create(" + expenseCategoryDto + ")");
         return expenseCategoryDto;
