@@ -38,7 +38,7 @@ class ExpenseMapperTest {
         //Given
         Expense expense = new Expense();
         ExpenseCategory expenseCategory = new ExpenseCategory();
-        expenseCategory.setId(CATEGORY_ID_1);
+        expenseCategory.setExpenseCategoryId(CATEGORY_ID_1);
         expense.setExpenseCategory(expenseCategory);
 
         //When

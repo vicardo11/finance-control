@@ -18,7 +18,7 @@ public class ExpenseCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long expenseCategoryId;
 
     @Column(unique = true)
     private String name;

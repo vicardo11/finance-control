@@ -76,7 +76,7 @@ public class ExpenseService {
         LOGGER.info("delete(" + expenseId + ")");
 
         Expense expense = readExpenseById(expenseId);
-        Long expenseCategoryId = expense.getExpenseCategory().getId();
+        Long expenseCategoryId = expense.getExpenseCategory().getExpenseCategoryId();
         ExpenseCategory expenseCategory = readExpenseCategoryById(expenseCategoryId);
         expenseCategory.deleteExpense(expense);
 
