@@ -8,8 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static it.sosinski.financecontrol.repository.entity.EntityConstants.COLUMN_NAME_EXPENSE_CATEGORY_ID;
-import static it.sosinski.financecontrol.repository.entity.EntityConstants.TABLE_NAME_EXPENSES;
+import static it.sosinski.financecontrol.repository.entity.EntityConstants.*;
 
 @Getter
 @Setter
@@ -30,4 +29,7 @@ public class Expense {
     @JoinColumn(name = COLUMN_NAME_EXPENSE_CATEGORY_ID, nullable = false)
     private ExpenseCategory expenseCategory;
 
+    @ManyToOne
+    @JoinColumn(name = COLUMN_NAME_ACCOUNT_ID, nullable = false)
+    private Account account;
 }

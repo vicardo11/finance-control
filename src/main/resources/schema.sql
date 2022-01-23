@@ -30,8 +30,10 @@ CREATE TABLE expenses
 	date                TIMESTAMP,
 	price               DECIMAL(19, 2),
 	expense_category_id BIGINT NOT NULL,
+	account_id          BIGINT NOT NULL,
 	CONSTRAINT pk_expenses PRIMARY KEY (expense_id),
-	CONSTRAINT fk_expenses_expense_category_category_id FOREIGN KEY (expense_category_id) REFERENCES expense_categories (expense_category_id)
+	CONSTRAINT fk_expenses_expense_category_category_id FOREIGN KEY (expense_category_id) REFERENCES expense_categories (expense_category_id),
+	CONSTRAINT fk_expenses_account_account_id FOREIGN KEY (account_id) REFERENCES accounts (account_id)
 );
 
 CREATE TABLE privileges

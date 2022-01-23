@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static it.sosinski.financecontrol.web.controller.ControllerConstants.ACCOUNT_SUB_URL;
 import static it.sosinski.financecontrol.web.controller.ControllerConstants.EXPENSES_URL;
 
 @RestController
@@ -37,6 +38,16 @@ class ExpenseController {
         return expenseDtos;
     }
 
+    @GetMapping(ACCOUNT_SUB_URL)
+    protected List<ExpenseDto> listByAccount(@RequestParam Long accountId) {
+        LOGGER.info("listByAccount(" + accountId + ")");
+
+        List<ExpenseDto> expenseDtos = expenseService.listByAccount(accountId);
+
+        LOGGER.info("listByAccount() = " + expenseDtos);
+        return expenseDtos;
+    }
+
     @GetMapping("/{id}")
     protected ExpenseDto read(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException {
         LOGGER.info("read(" + id + ")");
@@ -49,11 +60,11 @@ class ExpenseController {
 
     @PostMapping
     protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
-        LOGGER.info("newExpense(" + newExpenseDto + ")");
+        LOGGER.info("create(" + newExpenseDto + ")");
 
         ExpenseDto expenseDto = expenseService.create(newExpenseDto);
 
-        LOGGER.info("newExpense(...) = " + expenseDto);
+        LOGGER.info("create(...) = " + expenseDto);
         return expenseDto;
     }
 

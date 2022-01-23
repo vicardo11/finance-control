@@ -31,6 +31,10 @@ public class Account {
     @ToString.Exclude
     private Set<Role> roles;
 
+    @OneToMany
+    @ToString.Exclude
+    private Set<Expense> expenses;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -4,8 +4,8 @@ import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundExceptio
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
-import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.repository.entity.Expense;
+import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -25,19 +25,30 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
 
-    public ExpenseService(ExpenseCategoryRepository expenseCategoryRepository, ExpenseRepository expenseRepository, ExpenseMapper expenseMapper) {
+    public ExpenseService(ExpenseCategoryRepository expenseCategoryRepository, ExpenseRepository expenseRepository,
+                          ExpenseMapper expenseMapper) {
         this.expenseCategoryRepository = expenseCategoryRepository;
         this.expenseRepository = expenseRepository;
         this.expenseMapper = expenseMapper;
     }
 
+    public List<ExpenseDto> listByAccount(Long accountId) {
+        LOGGER.info("listByAccount()");
+
+        List<Expense> expenseEntities = expenseRepository.findAllByAccount_AccountId(accountId);
+        List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
+
+        LOGGER.info("listByAccount() = " + expenseDtos);
+        return expenseDtos;
+    }
+
     public List<ExpenseDto> list() {
-        LOGGER.info("expenseDtos()");
+        LOGGER.info("list()");
 
         List<Expense> expenseEntities = expenseRepository.findAll();
         List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
 
-        LOGGER.info("expenseDtos()");
+        LOGGER.info("list()");
         return expenseDtos;
     }
 
@@ -54,7 +65,7 @@ public class ExpenseService {
     }
 
     public ExpenseDto create(NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
-        LOGGER.info("newExpense(" + newExpenseDto + ")");
+        LOGGER.info("create(" + newExpenseDto + ")");
 
         ExpenseCategory expenseCategory = readExpenseCategoryById(newExpenseDto.getExpenseCategoryId());
 
@@ -68,7 +79,7 @@ public class ExpenseService {
 
         ExpenseDto expenseDto = expenseMapper.fromEntityToDto(savedExpense);
 
-        LOGGER.info("newExpense(" + expenseDto + ")");
+        LOGGER.info("create(" + expenseDto + ")");
         return expenseDto;
     }
 

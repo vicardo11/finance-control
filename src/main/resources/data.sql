@@ -12,19 +12,20 @@ INSERT INTO accounts (email, password)
 		('admin@gmail.com', '{bcrypt}$2a$12$ysESXEFxwlgvnaiM7gPHhugBg2MP45YQ65UTvsGgK09cgf5ZOpsn2');
 
 
-INSERT INTO expenses (date, price, expense_category_id)
+INSERT INTO expenses (date, price, expense_category_id, account_id)
 	VALUES
-		('2012-09-17', 20.40, 1),
-		('2012-09-18', 22.53, 1),
-		('2020-04-17', 33.40, 2),
-		('2020-04-12', 3.40, 3),
-		('2020-06-12', 13.40, 3),
-		('2020-06-13', 53.40, 4),
-		('2020-06-14', 1.40, 4);
+		('2012-09-17', 20.40, 1, 1),
+		('2012-09-18', 22.53, 1, 1),
+		('2020-04-17', 33.40, 2, 1),
+		('2020-04-12', 3.40, 3, 2),
+		('2020-06-12', 13.40, 3, 2),
+		('2020-06-13', 53.40, 4, 2),
+		('2020-06-14', 1.40, 4, 1);
 
-INSERT INTO roles (name) VALUES
-	                         ('ROLE_ADMIN'),
-	                         ('ROLE_USER');
+INSERT INTO roles (name)
+	VALUES
+		('ROLE_ADMIN'),
+		('ROLE_USER');
 
 INSERT INTO privileges (name)
 	VALUES
