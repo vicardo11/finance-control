@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.ExpenseCategoryAlreadyExists;
 import it.sosinski.financecontrol.service.ExpenseCategoryService;
 import it.sosinski.financecontrol.web.dto.ExpenseCategoryDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseCategoryDto;
@@ -34,7 +35,7 @@ public class ExpenseCategoryController {
     }
 
     @PostMapping
-    public ExpenseCategoryDto create(@RequestBody NewExpenseCategoryDto newExpenseCategoryDto) {
+    public ExpenseCategoryDto create(@RequestBody NewExpenseCategoryDto newExpenseCategoryDto) throws ExpenseCategoryAlreadyExists {
         LOGGER.info("create(" + newExpenseCategoryDto + ")");
 
         ExpenseCategoryDto expenseCategoryDto = expenseCategoryService.create(newExpenseCategoryDto);

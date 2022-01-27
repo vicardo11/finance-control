@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.service;
 
+import it.sosinski.financecontrol.core.exception.ExpenseCategoryAlreadyExists;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
 import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.service.mapper.ExpenseCategoryMapper;
@@ -34,17 +35,22 @@ public class ExpenseCategoryService {
         return expenseCategoryDtos;
     }
 
-    public ExpenseCategoryDto create(NewExpenseCategoryDto newExpenseCategoryDto) {
+    public ExpenseCategoryDto create(NewExpenseCategoryDto newExpenseCategoryDto) throws ExpenseCategoryAlreadyExists {
         LOGGER.info("create(" + newExpenseCategoryDto + ")");
 
-        // TODO: Check if category with given name already exists
-        // TODO: If so, throw message, that category already exists
         ExpenseCategory expenseCategory =
                 expenseCategoryMapper.fromNewExpenseCategoryDtoToEntity(newExpenseCategoryDto);
+        if (categoryNameExists(expenseCategory.getName())) {
+            throw new ExpenseCategoryAlreadyExists("ExpenseCategory already exists with name: " + expenseCategory.getName());
+        }
         ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(expenseCategory);
         ExpenseCategoryDto expenseCategoryDto = expenseCategoryMapper.fromEntityToDto(savedExpenseCategory);
 
         LOGGER.info("create(" + expenseCategoryDto + ")");
         return expenseCategoryDto;
+    }
+
+    private boolean categoryNameExists(String expenseCategoryName) {
+        return expenseCategoryRepository.findByName(expenseCategoryName).isPresent();
     }
 }
