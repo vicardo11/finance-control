@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,14 +30,14 @@ public class Role {
             joinColumns = {@JoinColumn(name = COLUMN_NAME_ROLE_ID)},
             inverseJoinColumns = {@JoinColumn(name = COLUMN_NAME_ACCOUNT_ID)})
     @ToString.Exclude
-    private Set<Account> accounts;
+    private Set<Account> accounts = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = TABLE_NAME_ROLES_PRIVILEGES,
             joinColumns = {@JoinColumn(name = COLUMN_NAME_ROLE_ID)},
             inverseJoinColumns = {@JoinColumn(name = COLUMN_NAME_PRIVILEGE_ID)})
     @ToString.Exclude
-    private Set<Privilege> privileges;
+    private Set<Privilege> privileges = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -49,5 +50,9 @@ public class Role {
     @Override
     public int hashCode() {
         return Objects.hash(roleId, name);
+    }
+
+    public void addAccount(Account account) {
+        accounts.add(account);
     }
 }

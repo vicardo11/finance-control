@@ -24,8 +24,8 @@ INSERT INTO expenses (date, price, expense_category_id, account_id)
 
 INSERT INTO roles (name)
 	VALUES
-		('ROLE_ADMIN'),
-		('ROLE_USER');
+		('ADMIN'),
+		('USER');
 
 INSERT INTO privileges (name)
 	VALUES

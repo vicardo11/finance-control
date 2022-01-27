@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,11 +30,11 @@ public class Account {
 
     @ManyToMany(mappedBy = "accounts")
     @ToString.Exclude
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany
     @ToString.Exclude
-    private Set<Expense> expenses;
+    private Set<Expense> expenses = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -46,5 +47,10 @@ public class Account {
     @Override
     public int hashCode() {
         return Objects.hash(accountId, email);
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+        role.addAccount(this);
     }
 }
