@@ -28,7 +28,7 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(mappedBy = "accounts")
+    @ManyToMany(mappedBy = "accounts", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Role> roles = new HashSet<>();
 

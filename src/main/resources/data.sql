@@ -8,8 +8,8 @@ INSERT INTO expense_categories (name)
 
 INSERT INTO accounts (email, password)
 	VALUES
-		('user@gmail.com', '{bcrypt}$2a$12$ysESXEFxwlgvnaiM7gPHhugBg2MP45YQ65UTvsGgK09cgf5ZOpsn2'),
-		('admin@gmail.com', '{bcrypt}$2a$12$ysESXEFxwlgvnaiM7gPHhugBg2MP45YQ65UTvsGgK09cgf5ZOpsn2');
+		('user@gmail.com', '$2a$10$E64OFU3dJCHShvSHZ7sDWuh9QeYMa2oRY/wYUKf9QvNtVkkTk3Yg.'),
+		('admin@gmail.com', '$2a$10$E64OFU3dJCHShvSHZ7sDWuh9QeYMa2oRY/wYUKf9QvNtVkkTk3Yg.');
 
 
 INSERT INTO expenses (date, price, expense_category_id, account_id)

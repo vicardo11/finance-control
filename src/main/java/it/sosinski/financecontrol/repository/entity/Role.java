@@ -32,7 +32,7 @@ public class Role {
     @ToString.Exclude
     private Set<Account> accounts = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = TABLE_NAME_ROLES_PRIVILEGES,
             joinColumns = {@JoinColumn(name = COLUMN_NAME_ROLE_ID)},
             inverseJoinColumns = {@JoinColumn(name = COLUMN_NAME_PRIVILEGE_ID)})

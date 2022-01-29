@@ -19,7 +19,7 @@ CREATE TABLE accounts
 (
 	account_id BIGINT AUTO_INCREMENT,
 	email      VARCHAR(255) NOT NULL,
-	password   VARCHAR(255) NOT NULL,
+	password   VARCHAR(60)  NOT NULL,
 	CONSTRAINT pk_accounts PRIMARY KEY (account_id),
 	CONSTRAINT unique_account_email UNIQUE (email)
 );
