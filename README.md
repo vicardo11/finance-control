@@ -37,3 +37,4 @@ Application is based on REST.
 * JUnit
 * Mockito
 * Gradle
+* H2 Database
