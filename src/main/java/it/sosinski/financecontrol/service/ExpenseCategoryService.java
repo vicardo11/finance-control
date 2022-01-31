@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class ExpenseCategoryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseCategoryService.class);
@@ -28,8 +30,8 @@ public class ExpenseCategoryService {
     public List<ExpenseCategoryDto> list() {
         LOGGER.info("list()");
 
-        List<ExpenseCategory> expenseCategories = expenseCategoryRepository.findAll();
-        List<ExpenseCategoryDto> expenseCategoryDtos = expenseCategoryMapper.fromEntitiesToDtos(expenseCategories);
+        List<ExpenseCategory> expenseCategories = listExpenseCategories();
+        List<ExpenseCategoryDto> expenseCategoryDtos = mapFromExpenseCategoriesToExpenseCategoryDtos(expenseCategories);
 
         LOGGER.info("list() = " + expenseCategoryDtos);
         return expenseCategoryDtos;
@@ -38,16 +40,37 @@ public class ExpenseCategoryService {
     public ExpenseCategoryDto create(NewExpenseCategoryDto newExpenseCategoryDto) throws ExpenseCategoryAlreadyExists {
         LOGGER.info("create(" + newExpenseCategoryDto + ")");
 
-        ExpenseCategory expenseCategory =
-                expenseCategoryMapper.fromNewExpenseCategoryDtoToEntity(newExpenseCategoryDto);
+        ExpenseCategory expenseCategory = mapFromNewExpenseCategoryDtoToExpense(newExpenseCategoryDto);
+
         if (categoryNameExists(expenseCategory.getName())) {
             throw new ExpenseCategoryAlreadyExists("ExpenseCategory already exists with name: " + expenseCategory.getName());
         }
-        ExpenseCategory savedExpenseCategory = expenseCategoryRepository.save(expenseCategory);
-        ExpenseCategoryDto expenseCategoryDto = expenseCategoryMapper.fromEntityToDto(savedExpenseCategory);
+
+        ExpenseCategory savedExpenseCategory = saveExpenseCategory(expenseCategory);
+        ExpenseCategoryDto expenseCategoryDto = mapFromExpenseCategoryToExpenseCategoryDto(savedExpenseCategory);
 
         LOGGER.info("create(" + expenseCategoryDto + ")");
         return expenseCategoryDto;
+    }
+
+    private List<ExpenseCategory> listExpenseCategories() {
+        return expenseCategoryRepository.findAll();
+    }
+
+    private ExpenseCategory saveExpenseCategory(ExpenseCategory expenseCategory) {
+        return expenseCategoryRepository.save(expenseCategory);
+    }
+
+    private List<ExpenseCategoryDto> mapFromExpenseCategoriesToExpenseCategoryDtos(List<ExpenseCategory> expenseCategories) {
+        return expenseCategoryMapper.fromEntitiesToDtos(expenseCategories);
+    }
+
+    private ExpenseCategoryDto mapFromExpenseCategoryToExpenseCategoryDto(ExpenseCategory savedExpenseCategory) {
+        return expenseCategoryMapper.fromEntityToDto(savedExpenseCategory);
+    }
+
+    private ExpenseCategory mapFromNewExpenseCategoryDtoToExpense(NewExpenseCategoryDto newExpenseCategoryDto) {
+        return expenseCategoryMapper.fromNewExpenseCategoryDtoToEntity(newExpenseCategoryDto);
     }
 
     private boolean categoryNameExists(String expenseCategoryName) {
