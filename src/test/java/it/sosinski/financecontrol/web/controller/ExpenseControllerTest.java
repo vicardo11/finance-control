@@ -11,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,23 +52,6 @@ class ExpenseControllerTest {
 
         //Then
         assertEquals(EXPENSE_ID_1, readExpenseDto.getExpenseId(), "Found ExpenseDto.id is not equal to: " + EXPENSE_ID_1);
-    }
-
-    @Test
-    void givenExpenseDtos_whenList_thenResultListSizeEquals() {
-        //Given
-        List<ExpenseDto> expenseDtos = List.of(
-                new ExpenseDto(),
-                new ExpenseDto()
-        );
-
-        when(expenseService.list()).thenReturn(expenseDtos);
-
-        //When
-        List<ExpenseDto> resultList = expenseController.list();
-
-        //Then
-        assertEquals(expenseDtos.size(), resultList.size(), "Result list isn't equal to: " + expenseDtos);
     }
 
     @Test

@@ -1,7 +1,8 @@
-package it.sosinski.financecontrol.service.mapper;
+package it.sosinski.financecontrol.web.service.mapper;
 
-import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.repository.entity.Expense;
+import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
+import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.junit.jupiter.api.Test;

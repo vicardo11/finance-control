@@ -1,6 +1,7 @@
 package it.sosinski.financecontrol.service;
 
 import it.sosinski.financecontrol.core.exception.AccountAlreadyExistsException;
+import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.RoleNotFoundException;
 import it.sosinski.financecontrol.repository.AccountRepository;
 import it.sosinski.financecontrol.repository.RoleRepository;
@@ -44,6 +45,18 @@ public class AccountService {
         saveAccount(account);
 
         LOGGER.info("register(...)");
+    }
+
+    public Account findByEmail(String email) throws AccountNotFoundException {
+        LOGGER.info("findByEmail(" + email + ")");
+
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        Account account = accountOptional.orElseThrow(
+                () -> new AccountNotFoundException("Account not found for email: " + email)
+        );
+
+        LOGGER.info("findByEmail(...) = " + account);
+        return account;
     }
 
     private boolean emailExists(String email) {

@@ -1,9 +1,11 @@
 package it.sosinski.financecontrol.service;
 
+import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
+import it.sosinski.financecontrol.repository.entity.Account;
 import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
@@ -24,31 +26,24 @@ public class ExpenseService {
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
+    private final AccountService accountService;
 
     public ExpenseService(ExpenseCategoryRepository expenseCategoryRepository, ExpenseRepository expenseRepository,
-                          ExpenseMapper expenseMapper) {
+                          ExpenseMapper expenseMapper, AccountService accountService) {
         this.expenseCategoryRepository = expenseCategoryRepository;
         this.expenseRepository = expenseRepository;
         this.expenseMapper = expenseMapper;
+        this.accountService = accountService;
     }
 
-    public List<ExpenseDto> listByAccount(Long accountId) {
+    public List<ExpenseDto> listByAccount(String email) throws AccountNotFoundException {
         LOGGER.info("listByAccount()");
 
-        List<Expense> expenseEntities = expenseRepository.findAllByAccount_AccountId(accountId);
+        Account account = accountService.findByEmail(email);
+        List<Expense> expenseEntities = expenseRepository.findAllByAccount_AccountId(account.getAccountId());
         List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
 
         LOGGER.info("listByAccount() = " + expenseDtos);
-        return expenseDtos;
-    }
-
-    public List<ExpenseDto> list() {
-        LOGGER.info("list()");
-
-        List<Expense> expenseEntities = expenseRepository.findAll();
-        List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
-
-        LOGGER.info("list()");
         return expenseDtos;
     }
 

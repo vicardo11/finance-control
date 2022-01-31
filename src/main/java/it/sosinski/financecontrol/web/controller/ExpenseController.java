@@ -1,5 +1,6 @@
 package it.sosinski.financecontrol.web.controller;
 
+import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
@@ -11,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
-import static it.sosinski.financecontrol.web.controller.ControllerConstants.ACCOUNT_SUB_URL;
 import static it.sosinski.financecontrol.web.controller.ControllerConstants.EXPENSES_URL;
 
 @RestController
@@ -29,20 +30,10 @@ class ExpenseController {
     }
 
     @GetMapping
-    protected List<ExpenseDto> list() {
-        LOGGER.info("list()");
+    protected List<ExpenseDto> listByAccount(Principal principal) throws AccountNotFoundException {
+        LOGGER.info("listByAccount()");
 
-        List<ExpenseDto> expenseDtos = expenseService.list();
-
-        LOGGER.info("list() = " + expenseDtos);
-        return expenseDtos;
-    }
-
-    @GetMapping(ACCOUNT_SUB_URL)
-    protected List<ExpenseDto> listByAccount(@RequestParam Long accountId) {
-        LOGGER.info("listByAccount(" + accountId + ")");
-
-        List<ExpenseDto> expenseDtos = expenseService.listByAccount(accountId);
+        List<ExpenseDto> expenseDtos = expenseService.listByAccount(principal.getName());
 
         LOGGER.info("listByAccount() = " + expenseDtos);
         return expenseDtos;
