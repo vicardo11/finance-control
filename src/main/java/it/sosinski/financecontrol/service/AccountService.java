@@ -39,9 +39,9 @@ public class AccountService {
             throw new AccountAlreadyExistsException("Account already exists with email: " + newAccountDto.getEmail());
         }
 
-        Account account = mapNewDtoToEntity(newAccountDto);
-        Role role = getUserRole();
-        account.addRole(role);
+        Account account = mapNewAccountDtoToAccount(newAccountDto);
+        Role userRole = getUserRole();
+        account.addRole(userRole);
         saveAccount(account);
 
         LOGGER.info("register(...)");
@@ -50,10 +50,7 @@ public class AccountService {
     public Account findByEmail(String email) throws AccountNotFoundException {
         LOGGER.info("findByEmail(" + email + ")");
 
-        Optional<Account> accountOptional = accountRepository.findByEmail(email);
-        Account account = accountOptional.orElseThrow(
-                () -> new AccountNotFoundException("Account not found for email: " + email)
-        );
+        Account account = readAccountByEmail(email);
 
         LOGGER.info("findByEmail(...) = " + account);
         return account;
@@ -63,7 +60,7 @@ public class AccountService {
         return accountRepository.findByEmail(email).isPresent();
     }
 
-    private Account mapNewDtoToEntity(NewAccountDto newAccountDto) {
+    private Account mapNewAccountDtoToAccount(NewAccountDto newAccountDto) {
         return accountMapper.fromNewDtoToEntity(newAccountDto);
     }
 
@@ -73,6 +70,13 @@ public class AccountService {
                 () -> new RoleNotFoundException("Role not found for name: " + ROLE_NAME_USER));
 
         return role;
+    }
+
+    private Account readAccountByEmail(String email) throws AccountNotFoundException {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        return accountOptional.orElseThrow(
+                () -> new AccountNotFoundException("Account not found for email: " + email)
+        );
     }
 
     private void saveAccount(Account account) {
