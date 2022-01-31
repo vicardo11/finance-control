@@ -15,10 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ExpenseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseService.class);
@@ -39,9 +41,9 @@ public class ExpenseService {
     public List<ExpenseDto> listByAccount(String email) throws AccountNotFoundException {
         LOGGER.info("listByAccount()");
 
-        Account account = accountService.findByEmail(email);
-        List<Expense> expenseEntities = expenseRepository.findAllByAccount_AccountId(account.getAccountId());
-        List<ExpenseDto> expenseDtos = expenseMapper.fromEntitiesToDtos(expenseEntities);
+        Account account = readAccountByEmail(email);
+        List<Expense> expenseEntities = listExpensesByAccount(account);
+        List<ExpenseDto> expenseDtos = mapFromExpensesToExpenseDtos(expenseEntities);
 
         LOGGER.info("listByAccount() = " + expenseDtos);
         return expenseDtos;
@@ -50,10 +52,8 @@ public class ExpenseService {
     public ExpenseDto read(Long expenseId) throws ExpenseNotFoundException {
         LOGGER.info("read(" + expenseId + ")");
 
-        Optional<Expense> optionalEvent = expenseRepository.findById(expenseId);
-        Expense expense = optionalEvent.orElseThrow(
-                () -> new ExpenseNotFoundException(expenseId));
-        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(expense);
+        Expense expense = readExpenseById(expenseId);
+        ExpenseDto expenseDto = mapExpenseToExpenseDto(expense);
 
         LOGGER.info("read(...) = " + expenseDto);
         return expenseDto;
@@ -78,34 +78,50 @@ public class ExpenseService {
         return expenseDto;
     }
 
-    private ExpenseDto mapExpenseToExpenseDto(Expense savedExpense) {
-        return expenseMapper.fromEntityToDto(savedExpense);
+    public void delete(Long expenseId) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
+        LOGGER.info("delete(" + expenseId + ")");
+
+        Expense expense = readExpenseById(expenseId);
+        ExpenseCategory expenseCategory = readExpenseCategoryById(expense.getExpenseCategory().getExpenseCategoryId());
+
+        expenseCategory.deleteExpense(expense);
+
+        saveExpenseCategory(expenseCategory);
+        deleteExpense(expense);
+
+        LOGGER.info("delete(...)");
     }
 
-    private Expense saveExpense(Expense expense) {
-        return expenseRepository.save(expense);
+    private void deleteExpense(Expense expense) {
+        expenseRepository.delete(expense);
+    }
+
+    private List<ExpenseDto> mapFromExpensesToExpenseDtos(List<Expense> expenseEntities) {
+        return expenseMapper.fromEntitiesToDtos(expenseEntities);
     }
 
     private Expense mapNewExpenseDtoToExpense(NewExpenseDto newExpenseDto) {
         return expenseMapper.fromNewDtoToEntity(newExpenseDto);
     }
 
-    private Account readAccountByEmail(String accountEmail) throws AccountNotFoundException {
-        return accountService.findByEmail(accountEmail);
+    private ExpenseDto mapExpenseToExpenseDto(Expense savedExpense) {
+        return expenseMapper.fromEntityToDto(savedExpense);
     }
 
-    public void delete(Long expenseId) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
-        LOGGER.info("delete(" + expenseId + ")");
+    private List<Expense> listExpensesByAccount(Account account) {
+        return expenseRepository.findAllByAccount_AccountId(account.getAccountId());
+    }
 
-        Expense expense = readExpenseById(expenseId);
-        Long expenseCategoryId = expense.getExpenseCategory().getExpenseCategoryId();
-        ExpenseCategory expenseCategory = readExpenseCategoryById(expenseCategoryId);
-        expenseCategory.deleteExpense(expense);
+    private ExpenseCategory saveExpenseCategory(ExpenseCategory expenseCategory) {
+        return expenseCategoryRepository.save(expenseCategory);
+    }
 
-        expenseCategoryRepository.save(expenseCategory);
-        expenseRepository.delete(expense);
+    private Expense saveExpense(Expense expense) {
+        return expenseRepository.save(expense);
+    }
 
-        LOGGER.info("delete(...)");
+    private Account readAccountByEmail(String accountEmail) throws AccountNotFoundException {
+        return accountService.findByEmail(accountEmail);
     }
 
     private ExpenseCategory readExpenseCategoryById(Long expenseCategoryId) throws ExpenseCategoryNotFoundException {
