@@ -1,6 +1,7 @@
 package it.sosinski.financecontrol.service;
 
 import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
+import it.sosinski.financecontrol.core.exception.AccountNotOwnerException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
@@ -78,8 +79,13 @@ public class ExpenseService {
         return expenseDto;
     }
 
-    public void delete(Long expenseId) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
+    public void delete(Long expenseId, String email) throws ExpenseNotFoundException,
+            ExpenseCategoryNotFoundException, AccountNotFoundException, AccountNotOwnerException {
         LOGGER.info("delete(" + expenseId + ")");
+
+        if (!isAccountOwnerOfExpense(expenseId, email)) {
+            throw new AccountNotOwnerException("Account with email: " + email + " is not owner of expense with id: " + expenseId);
+        }
 
         Expense expense = readExpenseById(expenseId);
         ExpenseCategory expenseCategory = readExpenseCategoryById(expense.getExpenseCategory().getExpenseCategoryId());
@@ -90,6 +96,14 @@ public class ExpenseService {
         deleteExpense(expense);
 
         LOGGER.info("delete(...)");
+    }
+
+    private boolean isAccountOwnerOfExpense(Long expenseId, String email) throws AccountNotFoundException,
+            ExpenseNotFoundException {
+        Account account = readAccountByEmail(email);
+        Expense expense = readExpenseById(expenseId);
+
+        return expense.getAccount().getAccountId().equals(account.getAccountId());
     }
 
     private void deleteExpense(Expense expense) {

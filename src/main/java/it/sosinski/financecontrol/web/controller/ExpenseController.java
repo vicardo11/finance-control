@@ -1,6 +1,7 @@
 package it.sosinski.financecontrol.web.controller;
 
 import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
+import it.sosinski.financecontrol.core.exception.AccountNotOwnerException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
@@ -62,10 +63,11 @@ class ExpenseController {
     }
 
     @DeleteMapping("/{id}")
-    protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {
+    protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException, AccountNotOwnerException, AccountNotFoundException {
         LOGGER.info("delete(" + id + ")");
 
-        expenseService.delete(id);
+        String email = principal.getName();
+        expenseService.delete(id, email);
 
         LOGGER.info("delete(...)");
         return new ResponseEntity<>("Expense correctly deleted", HttpStatus.OK);
