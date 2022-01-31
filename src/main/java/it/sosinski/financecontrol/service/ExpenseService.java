@@ -59,23 +59,39 @@ public class ExpenseService {
         return expenseDto;
     }
 
-    public ExpenseDto create(NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
+    public ExpenseDto create(NewExpenseDto newExpenseDto, String accountEmail) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
         LOGGER.info("create(" + newExpenseDto + ")");
 
+        Account account = readAccountByEmail(accountEmail);
         ExpenseCategory expenseCategory = readExpenseCategoryById(newExpenseDto.getExpenseCategoryId());
 
-        Expense expense = expenseMapper.fromNewDtoToEntity(newExpenseDto);
+        Expense expense = mapNewExpenseDtoToExpense(newExpenseDto);
 
-        expenseCategory.addExpense(expense);
+        expense.setAccount(account);
+        expense.setExpenseCategory(expenseCategory);
 
-        Expense savedExpense = expenseRepository.save(expense);
+        Expense savedExpense = saveExpense(expense);
 
-        expenseCategoryRepository.save(expenseCategory);
-
-        ExpenseDto expenseDto = expenseMapper.fromEntityToDto(savedExpense);
+        ExpenseDto expenseDto = mapExpenseToExpenseDto(savedExpense);
 
         LOGGER.info("create(" + expenseDto + ")");
         return expenseDto;
+    }
+
+    private ExpenseDto mapExpenseToExpenseDto(Expense savedExpense) {
+        return expenseMapper.fromEntityToDto(savedExpense);
+    }
+
+    private Expense saveExpense(Expense expense) {
+        return expenseRepository.save(expense);
+    }
+
+    private Expense mapNewExpenseDtoToExpense(NewExpenseDto newExpenseDto) {
+        return expenseMapper.fromNewDtoToEntity(newExpenseDto);
+    }
+
+    private Account readAccountByEmail(String accountEmail) throws AccountNotFoundException {
+        return accountService.findByEmail(accountEmail);
     }
 
     public void delete(Long expenseId) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException {

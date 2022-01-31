@@ -1,10 +1,8 @@
 package it.sosinski.financecontrol.web.controller;
 
-import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
-import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +11,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,36 +51,4 @@ class ExpenseControllerTest {
         assertEquals(EXPENSE_ID_1, readExpenseDto.getExpenseId(), "Found ExpenseDto.id is not equal to: " + EXPENSE_ID_1);
     }
 
-    @Test
-    void given_whenCreate_thenResultExpenseDtoNotNull() throws ExpenseCategoryNotFoundException {
-        //Given
-        NewExpenseDto newExpenseDto = new NewExpenseDto();
-
-        ExpenseDto expenseDto = new ExpenseDto();
-
-        when(expenseService.create(any())).thenReturn(expenseDto);
-
-        //When
-        ExpenseDto resultExpenseDto = expenseController.create(newExpenseDto);
-
-        //Then
-        assertNotNull(resultExpenseDto, "Result expenseDto is null");
-    }
-
-    @Test
-    void given_whenCreate_thenResultExpenseDtoIdEquals() throws ExpenseCategoryNotFoundException {
-        //Given
-        NewExpenseDto newExpenseDto = new NewExpenseDto();
-
-        ExpenseDto expenseDto = new ExpenseDto();
-        expenseDto.setExpenseId(EXPENSE_ID_1);
-
-        when(expenseService.create(any())).thenReturn(expenseDto);
-
-        //When
-        ExpenseDto resultExpenseDto = expenseController.create(newExpenseDto);
-
-        //Then
-        assertEquals(EXPENSE_ID_1, resultExpenseDto.getExpenseId(), "Result expenseDto.id isn't equal to: " + EXPENSE_ID_1);
-    }
 }

@@ -50,10 +50,12 @@ class ExpenseController {
     }
 
     @PostMapping
-    protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto) throws ExpenseCategoryNotFoundException {
+    protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto, Principal principal) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
         LOGGER.info("create(" + newExpenseDto + ")");
 
-        ExpenseDto expenseDto = expenseService.create(newExpenseDto);
+        String email = principal.getName();
+
+        ExpenseDto expenseDto = expenseService.create(newExpenseDto, email);
 
         LOGGER.info("create(...) = " + expenseDto);
         return expenseDto;
