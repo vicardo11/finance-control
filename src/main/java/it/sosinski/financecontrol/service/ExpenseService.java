@@ -1,7 +1,6 @@
 package it.sosinski.financecontrol.service;
 
 import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
-import it.sosinski.financecontrol.core.exception.AccountNotOwnerException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
@@ -80,7 +79,7 @@ public class ExpenseService {
     }
 
     public void delete(Long expenseId) throws ExpenseNotFoundException,
-            ExpenseCategoryNotFoundException, AccountNotFoundException, AccountNotOwnerException {
+            ExpenseCategoryNotFoundException {
         LOGGER.info("delete(" + expenseId + ")");
 
         Expense expense = readExpenseById(expenseId);
