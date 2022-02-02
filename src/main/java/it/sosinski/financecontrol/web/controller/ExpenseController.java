@@ -4,6 +4,7 @@ import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.AccountNotOwnerException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
+import it.sosinski.financecontrol.service.AuthenticationService;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
@@ -25,9 +26,11 @@ class ExpenseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseController.class);
 
     private final ExpenseService expenseService;
+    private final AuthenticationService authenticationService;
 
-    ExpenseController(ExpenseService expenseService) {
+    ExpenseController(ExpenseService expenseService, AuthenticationService authenticationService) {
         this.expenseService = expenseService;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping
@@ -41,10 +44,17 @@ class ExpenseController {
     }
 
     @GetMapping("/{id}")
-    protected ExpenseDto read(@PathVariable(name = "id") Long id) throws ExpenseNotFoundException {
+    protected ExpenseDto read(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, AccountNotFoundException, AccountNotOwnerException {
         LOGGER.info("read(" + id + ")");
 
-        ExpenseDto expenseDto = expenseService.read(id);
+        boolean authenticated = authenticationService.isAuthenticated(id, principal.getName());
+
+        ExpenseDto expenseDto;
+        if (authenticated) {
+            expenseDto = expenseService.read(id);
+        } else {
+            throw new AccountNotOwnerException("Account is not an owner of an expense with id: " + id);
+        }
 
         LOGGER.info("read() = " + expenseDto);
         return expenseDto;
@@ -66,8 +76,13 @@ class ExpenseController {
     protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException, AccountNotOwnerException, AccountNotFoundException {
         LOGGER.info("delete(" + id + ")");
 
-        String email = principal.getName();
-        expenseService.delete(id, email);
+        boolean authenticated = authenticationService.isAuthenticated(id, principal.getName());
+
+        if (authenticated) {
+            expenseService.delete(id);
+        } else {
+            throw new AccountNotOwnerException("Account is not an owner of an expense with id: " + id);
+        }
 
         LOGGER.info("delete(...)");
         return new ResponseEntity<>("Expense correctly deleted", HttpStatus.OK);
