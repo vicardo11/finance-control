@@ -4,7 +4,6 @@ import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.PropertyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,18 +16,6 @@ public class ExpenseMapper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseMapper.class);
     private static final ModelMapper mapper = new ModelMapper();
-
-    public ExpenseMapper() {
-        /* We have to skip this property, because mapper was using expenseCategoryId
-           as both - an expenseId and an expenseCategoryId
-         */
-        mapper.addMappings(new PropertyMap<NewExpenseDto, Expense>() {
-            @Override
-            protected void configure() {
-                skip(destination.getExpenseId());
-            }
-        });
-    }
 
     public Expense fromDtoToEntity(ExpenseDto expenseDto) {
         LOGGER.info("fromDtoToEntity(" + expenseDto + ")");
