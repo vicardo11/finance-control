@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS accounts_expenses;
 DROP TABLE IF EXISTS expenses;
 DROP TABLE IF EXISTS accounts_roles;
 DROP TABLE IF EXISTS roles_privileges;
@@ -5,7 +6,6 @@ DROP TABLE IF EXISTS expense_categories;
 DROP TABLE IF EXISTS accounts;
 DROP TABLE IF EXISTS privileges;
 DROP TABLE IF EXISTS roles;
-
 
 CREATE TABLE expense_categories
 (
@@ -68,4 +68,13 @@ CREATE TABLE accounts_roles
 	CONSTRAINT pk_accounts_roles PRIMARY KEY (role_id, account_id),
 	CONSTRAINT fk_accounts_roles_account FOREIGN KEY (account_id) REFERENCES accounts (account_id),
 	CONSTRAINT fk_accounts_roles_role FOREIGN KEY (role_id) REFERENCES roles (role_id)
+);
+
+CREATE TABLE accounts_expenses
+(
+	account_id    BIGINT NOT NULL,
+	expense_id    BIGINT NOT NULL,
+	CONSTRAINT pk_accounts_expenses PRIMARY KEY (account_id, expense_id),
+	CONSTRAINT fk_accounts_expenses_account FOREIGN KEY (account_id) REFERENCES accounts (account_id),
+	CONSTRAINT fk_accounts_expenses_expense FOREIGN KEY (expense_id) REFERENCES expenses (expense_id)
 );

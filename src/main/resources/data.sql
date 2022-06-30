@@ -8,8 +8,8 @@ INSERT INTO expense_categories (name)
 
 INSERT INTO accounts (email, password)
 	VALUES
-		('user@gmail.com', '$2a$10$E64OFU3dJCHShvSHZ7sDWuh9QeYMa2oRY/wYUKf9QvNtVkkTk3Yg.'),
-		('admin@gmail.com', '$2a$10$E64OFU3dJCHShvSHZ7sDWuh9QeYMa2oRY/wYUKf9QvNtVkkTk3Yg.');
+		('user@gmail.com', '$2a$10$sXL0IVREAPeoL5bb1aydN.iUFS9eRG/URWToRkpZNnL.7tc9kIwxC'),
+		('admin@gmail.com', '$2a$10$sXL0IVREAPeoL5bb1aydN.iUFS9eRG/URWToRkpZNnL.7tc9kIwxC');
 
 
 INSERT INTO expenses (date, price, expense_category_id, account_id)
@@ -44,3 +44,10 @@ INSERT INTO roles_privileges (role_id, privilege_id)
 		(1, 2),
 		(1, 3),
 		(2, 2);
+
+INSERT INTO accounts_expenses (account_id, expense_id)
+	VALUES
+		(1, 1),
+		(2, 2),
+		(1, 3),
+		(2, 4);
