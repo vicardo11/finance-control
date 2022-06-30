@@ -2,10 +2,10 @@ package it.sosinski.financecontrol.web.controller;
 
 public class ControllerConstants {
 
-    static final String EXPENSES_URL = "/EXPENSES";
-    static final String EXPENSE_CATEGORIES_URL = "/EXPENSE_CATEGORIES";
-    static final String ACCOUNTS_URL = "/ACCOUNTS";
+    static final String EXPENSES_URL = "/expenses";
+    static final String EXPENSE_CATEGORIES_URL = "/expense_categories";
+    static final String ACCOUNTS_URL = "/accounts";
 
-    static final String ACCOUNT_SUB_URL = "/ACCOUNT";
-    static final String REGISTRATION_SUB_URL = "/REGISTRATION";
+    static final String ACCOUNT_SUB_URL = "/account";
+    static final String REGISTRATION_SUB_URL = "/registration";
 }
