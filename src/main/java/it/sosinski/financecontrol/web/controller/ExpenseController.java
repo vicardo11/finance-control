@@ -4,12 +4,11 @@ import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.AccountNotOwnerException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
+import it.sosinski.financecontrol.logging.LogInfo;
 import it.sosinski.financecontrol.service.AuthenticationService;
 import it.sosinski.financecontrol.service.ExpenseService;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +22,6 @@ import static it.sosinski.financecontrol.web.controller.ControllerConstants.EXPE
 @RequestMapping(value = EXPENSES_URL)
 class ExpenseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseController.class);
-
     private final ExpenseService expenseService;
     private final AuthenticationService authenticationService;
 
@@ -33,19 +30,18 @@ class ExpenseController {
         this.authenticationService = authenticationService;
     }
 
+    @LogInfo
     @GetMapping
     protected ResponseEntity<List<ExpenseDto>> listByAccount(Principal principal) throws AccountNotFoundException {
-        LOGGER.info("listByAccount()");
 
         List<ExpenseDto> expenseDtos = expenseService.listByAccount(principal.getName());
 
-        LOGGER.info("listByAccount() = " + expenseDtos);
         return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
     }
 
+    @LogInfo
     @GetMapping("/{id}")
     protected ResponseEntity<ExpenseDto> read(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, AccountNotFoundException, AccountNotOwnerException {
-        LOGGER.info("read(" + id + ")");
 
         boolean authenticated = authenticationService.isAuthenticated(id, principal.getName());
 
@@ -56,25 +52,23 @@ class ExpenseController {
             throw new AccountNotOwnerException("Account is not an owner of an expense with id: " + id);
         }
 
-        LOGGER.info("read() = " + expenseDto);
         return new ResponseEntity<>(expenseDto, HttpStatus.OK);
     }
 
+    @LogInfo
     @PostMapping
     protected ResponseEntity<ExpenseDto> create(@RequestBody NewExpenseDto newExpenseDto, Principal principal) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
-        LOGGER.info("create(" + newExpenseDto + ")");
 
         String email = principal.getName();
 
         ExpenseDto expenseDto = expenseService.create(newExpenseDto, email);
 
-        LOGGER.info("create(...) = " + expenseDto);
-        return new ResponseEntity(expenseDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(expenseDto, HttpStatus.CREATED);
     }
 
+    @LogInfo
     @DeleteMapping("/{id}")
     protected ResponseEntity<String> delete(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, ExpenseCategoryNotFoundException, AccountNotOwnerException, AccountNotFoundException {
-        LOGGER.info("delete(" + id + ")");
 
         boolean authenticated = authenticationService.isAuthenticated(id, principal.getName());
 
@@ -84,7 +78,6 @@ class ExpenseController {
             throw new AccountNotOwnerException("Account is not an owner of an expense with id: " + id);
         }
 
-        LOGGER.info("delete(...)");
         return new ResponseEntity<>("Expense correctly deleted", HttpStatus.OK);
     }
 
