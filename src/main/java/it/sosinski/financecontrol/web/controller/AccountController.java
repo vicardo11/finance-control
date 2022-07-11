@@ -36,6 +36,6 @@ public class AccountController {
         accountService.register(newAccountDto);
 
         LOGGER.info("register(...)");
-        return new ResponseEntity<>("Account created!", HttpStatus.OK);
+        return new ResponseEntity<>("Account created!", HttpStatus.CREATED);
     }
 }

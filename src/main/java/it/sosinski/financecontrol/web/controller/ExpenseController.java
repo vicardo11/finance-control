@@ -34,17 +34,17 @@ class ExpenseController {
     }
 
     @GetMapping
-    protected List<ExpenseDto> listByAccount(Principal principal) throws AccountNotFoundException {
+    protected ResponseEntity<List<ExpenseDto>> listByAccount(Principal principal) throws AccountNotFoundException {
         LOGGER.info("listByAccount()");
 
         List<ExpenseDto> expenseDtos = expenseService.listByAccount(principal.getName());
 
         LOGGER.info("listByAccount() = " + expenseDtos);
-        return expenseDtos;
+        return new ResponseEntity<>(expenseDtos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    protected ExpenseDto read(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, AccountNotFoundException, AccountNotOwnerException {
+    protected ResponseEntity<ExpenseDto> read(@PathVariable(name = "id") Long id, Principal principal) throws ExpenseNotFoundException, AccountNotFoundException, AccountNotOwnerException {
         LOGGER.info("read(" + id + ")");
 
         boolean authenticated = authenticationService.isAuthenticated(id, principal.getName());
@@ -57,11 +57,11 @@ class ExpenseController {
         }
 
         LOGGER.info("read() = " + expenseDto);
-        return expenseDto;
+        return new ResponseEntity<>(expenseDto, HttpStatus.OK);
     }
 
     @PostMapping
-    protected ExpenseDto create(@RequestBody NewExpenseDto newExpenseDto, Principal principal) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
+    protected ResponseEntity<ExpenseDto> create(@RequestBody NewExpenseDto newExpenseDto, Principal principal) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
         LOGGER.info("create(" + newExpenseDto + ")");
 
         String email = principal.getName();
@@ -69,7 +69,7 @@ class ExpenseController {
         ExpenseDto expenseDto = expenseService.create(newExpenseDto, email);
 
         LOGGER.info("create(...) = " + expenseDto);
-        return expenseDto;
+        return new ResponseEntity(expenseDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
