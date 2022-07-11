@@ -3,6 +3,7 @@ package it.sosinski.financecontrol.service;
 import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseCategoryNotFoundException;
 import it.sosinski.financecontrol.core.exception.ExpenseNotFoundException;
+import it.sosinski.financecontrol.logging.LogInfo;
 import it.sosinski.financecontrol.repository.ExpenseCategoryRepository;
 import it.sosinski.financecontrol.repository.ExpenseRepository;
 import it.sosinski.financecontrol.repository.entity.Account;
@@ -11,8 +12,6 @@ import it.sosinski.financecontrol.repository.entity.ExpenseCategory;
 import it.sosinski.financecontrol.service.mapper.ExpenseMapper;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,8 +21,6 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ExpenseService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseService.class);
 
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseRepository expenseRepository;
@@ -38,29 +35,27 @@ public class ExpenseService {
         this.accountService = accountService;
     }
 
+    @LogInfo
     public List<ExpenseDto> listByAccount(String email) throws AccountNotFoundException {
-        LOGGER.info("listByAccount()");
 
         Account account = readAccountByEmail(email);
         List<Expense> expenseEntities = listExpensesByAccount(account);
         List<ExpenseDto> expenseDtos = mapFromExpensesToExpenseDtos(expenseEntities);
 
-        LOGGER.info("listByAccount() = " + expenseDtos);
         return expenseDtos;
     }
 
+    @LogInfo
     public ExpenseDto read(Long expenseId) throws ExpenseNotFoundException {
-        LOGGER.info("read(" + expenseId + ")");
 
         Expense expense = readExpenseById(expenseId);
         ExpenseDto expenseDto = mapExpenseToExpenseDto(expense);
 
-        LOGGER.info("read(...) = " + expenseDto);
         return expenseDto;
     }
 
+    @LogInfo
     public ExpenseDto create(NewExpenseDto newExpenseDto, String accountEmail) throws ExpenseCategoryNotFoundException, AccountNotFoundException {
-        LOGGER.info("create(" + newExpenseDto + ")");
 
         Account account = readAccountByEmail(accountEmail);
         ExpenseCategory expenseCategory = readExpenseCategoryById(newExpenseDto.getExpenseCategoryId());
@@ -74,13 +69,12 @@ public class ExpenseService {
 
         ExpenseDto expenseDto = mapExpenseToExpenseDto(savedExpense);
 
-        LOGGER.info("create(" + expenseDto + ")");
         return expenseDto;
     }
 
+    @LogInfo
     public void delete(Long expenseId) throws ExpenseNotFoundException,
             ExpenseCategoryNotFoundException {
-        LOGGER.info("delete(" + expenseId + ")");
 
         Expense expense = readExpenseById(expenseId);
         ExpenseCategory expenseCategory = readExpenseCategoryById(expense.getExpenseCategory().getExpenseCategoryId());
@@ -90,7 +84,6 @@ public class ExpenseService {
         saveExpenseCategory(expenseCategory);
         deleteExpense(expense);
 
-        LOGGER.info("delete(...)");
     }
 
     private void deleteExpense(Expense expense) {

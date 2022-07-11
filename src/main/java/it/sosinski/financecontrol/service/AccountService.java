@@ -3,14 +3,13 @@ package it.sosinski.financecontrol.service;
 import it.sosinski.financecontrol.core.exception.AccountAlreadyExistsException;
 import it.sosinski.financecontrol.core.exception.AccountNotFoundException;
 import it.sosinski.financecontrol.core.exception.RoleNotFoundException;
+import it.sosinski.financecontrol.logging.LogInfo;
 import it.sosinski.financecontrol.repository.AccountRepository;
 import it.sosinski.financecontrol.repository.RoleRepository;
 import it.sosinski.financecontrol.repository.entity.Account;
 import it.sosinski.financecontrol.repository.entity.Role;
 import it.sosinski.financecontrol.service.mapper.AccountMapper;
 import it.sosinski.financecontrol.web.dto.NewAccountDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,7 +18,6 @@ import java.util.Optional;
 public class AccountService {
 
     public static final String ROLE_NAME_USER = "USER";
-    private final Logger LOGGER = LoggerFactory.getLogger(AccountService.class);
 
     private final AccountRepository accountRepository;
     private final RoleRepository roleRepository;
@@ -32,8 +30,8 @@ public class AccountService {
         this.accountMapper = accountMapper;
     }
 
+    @LogInfo
     public void register(NewAccountDto newAccountDto) throws RoleNotFoundException, AccountAlreadyExistsException {
-        LOGGER.info("register(" + newAccountDto + ")");
 
         if (emailExists(newAccountDto.getEmail())) {
             throw new AccountAlreadyExistsException("Account already exists with email: " + newAccountDto.getEmail());
@@ -44,16 +42,12 @@ public class AccountService {
         account.addRole(userRole);
         saveAccount(account);
 
-        LOGGER.info("register(...)");
     }
 
+    @LogInfo
     public Account findByEmail(String email) throws AccountNotFoundException {
-        LOGGER.info("findByEmail(" + email + ")");
 
-        Account account = readAccountByEmail(email);
-
-        LOGGER.info("findByEmail(...) = " + account);
-        return account;
+        return readAccountByEmail(email);
     }
 
     private boolean emailExists(String email) {
