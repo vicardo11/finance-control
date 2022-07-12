@@ -5,8 +5,10 @@ import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +16,16 @@ import java.util.stream.Collectors;
 public class ExpenseMapper {
 
     private static final ModelMapper mapper = new ModelMapper();
+
+    @PostConstruct
+    private void configure() {
+        mapper.addMappings(new PropertyMap<NewExpenseDto, Expense>() {
+            @Override
+            protected void configure() {
+                skip(destination.getExpenseId());
+            }
+        });
+    }
 
     @LogInfo
     public Expense fromDtoToEntity(ExpenseDto expenseDto) {
