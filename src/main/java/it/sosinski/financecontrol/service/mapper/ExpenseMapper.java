@@ -1,11 +1,10 @@
 package it.sosinski.financecontrol.service.mapper;
 
+import it.sosinski.financecontrol.logging.LogInfo;
 import it.sosinski.financecontrol.repository.entity.Expense;
 import it.sosinski.financecontrol.web.dto.ExpenseDto;
 import it.sosinski.financecontrol.web.dto.NewExpenseDto;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,53 +13,36 @@ import java.util.stream.Collectors;
 @Component
 public class ExpenseMapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExpenseMapper.class);
     private static final ModelMapper mapper = new ModelMapper();
 
+    @LogInfo
     public Expense fromDtoToEntity(ExpenseDto expenseDto) {
-        LOGGER.info("fromDtoToEntity(" + expenseDto + ")");
 
-        Expense expense = mapper.map(expenseDto, Expense.class);
-
-        LOGGER.info("fromDtoToEntity(...) = " + expense);
-        return expense;
+        return mapper.map(expenseDto, Expense.class);
     }
 
+    @LogInfo
     public ExpenseDto fromEntityToDto(Expense expense) {
-        LOGGER.info("fromEntityToDto(" + expense + ")");
 
-        ExpenseDto expenseDto = mapper.map(expense, ExpenseDto.class);
-
-        LOGGER.info("fromEntityToDto(...) = " + expenseDto);
-        return expenseDto;
+        return mapper.map(expense, ExpenseDto.class);
     }
 
+    @LogInfo
     public List<Expense> fromDtosToEntities(List<ExpenseDto> expenseDtos) {
-        LOGGER.info("fromDtosToEntities(" + expenseDtos + ")");
 
-        List<Expense> expenseEntities =
-                expenseDtos.stream().map(this::fromDtoToEntity).collect(Collectors.toList());
-
-        LOGGER.info("fromDtosToEntities(...) = " + expenseEntities);
-        return expenseEntities;
+        return expenseDtos.stream().map(this::fromDtoToEntity).collect(Collectors.toList());
     }
 
+    @LogInfo
     public List<ExpenseDto> fromEntitiesToDtos(List<Expense> expenseEntities) {
-        LOGGER.info("fromEntitiesToDtos(" + expenseEntities + ")");
 
-        List<ExpenseDto> expenseDtos = expenseEntities.stream().map(this::fromEntityToDto).collect(Collectors.toList());
-
-        LOGGER.info("fromEntitiesToDtos(...) = " + expenseDtos);
-        return expenseDtos;
+        return expenseEntities.stream().map(this::fromEntityToDto).collect(Collectors.toList());
     }
 
+    @LogInfo
     public Expense fromNewDtoToEntity(NewExpenseDto newExpenseDto) {
-        LOGGER.info("fromNewDtoToEntity(" + newExpenseDto + ")");
 
-        Expense expense = mapper.map(newExpenseDto, Expense.class);
-
-        LOGGER.info("fromNewDtoToEntity(...) = " + expense);
-        return expense;
+        return mapper.map(newExpenseDto, Expense.class);
     }
 
 }
