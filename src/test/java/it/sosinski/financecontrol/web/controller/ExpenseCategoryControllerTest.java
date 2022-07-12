@@ -42,7 +42,7 @@ class ExpenseCategoryControllerTest {
     }
 
     @Test
-    void whenPostThenStatusIsOk() throws Exception {
+    void whenPostThenStatusIsCreated() throws Exception {
         //Given
         var categoryDto = new NewExpenseCategoryDto(CATEGORY_NAME_HOME);
         var categoryAsString = objectMapper.writeValueAsString(categoryDto);
@@ -51,7 +51,7 @@ class ExpenseCategoryControllerTest {
         mvc.perform(post(EXPENSE_CATEGORIES_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryAsString))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         //Then
     }
